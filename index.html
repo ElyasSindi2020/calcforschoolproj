@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for Material You Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif; /* Using Roboto for Material You */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3e5f5; /* Light purple background - Material You */
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: #1a1a1a; /* Dark background */
+        }
+
+        .calculator-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .settings-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2.5em;
+            color: #9c27b0; /* Purple settings icon - Material You */
+            cursor: pointer;
+            transition: transform 0.7s ease-in-out, color 0.3s ease;
+            z-index: 100;
+        }
+
+        .dark-mode .settings-button {
+            color: #ce93d8; /* Light purple for dark mode */
+        }
+
+        .settings-button:hover {
+            color: #7b1fa2; /* Darker purple hover - Material You */
+        }
+
+        .settings-button.spinning {
+            animation: spin 1s linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .calculator {
+            background-color: #fff; /* White calculator background - Material You */
+            border-radius: 20px; /* More rounded corners - Material You */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow - Material You */
+            overflow: hidden;
+            width: 100%;
+            padding: 25px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+            transform: scale(1.02);
+            opacity: 1;
+        }
+
+        .calculator.slide-up {
+            transform: translateY(-30px) scale(0.9);
+            opacity: 0;
+        }
+
+        .dark-mode .calculator {
+            background-color: #303030; /* Dark grey calculator background - Material You */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .display {
+            margin-bottom: 25px;
+            animation: slideInDisplay 0.7s ease-out;
+        }
+
+        @keyframes slideInDisplay {
+            from {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .display input {
+            width: 100%;
+            padding: 20px;
+            font-size: 36px; /* Larger font size - Material You */
+            text-align: right;
+            border: none;
+            border-radius: 12px; /* More rounded corners - Material You */
+            background-color: #f8f0fb; /* Very light purple display - Material You */
+            color: #212121; /* Very dark grey text - Material You */
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dark-mode .display input {
+            background-color: #424242; /* Darker grey display - Material You */
+            color: #f5f5f5; /* Very light grey text - Material You */
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 12px;
+            animation: fadeInButtons 0.7s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInButtons {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .buttons button {
+            padding: 18px;
+            font-size: 24px;
+            border: none;
+            border-radius: 12px; /* More rounded corners - Material You */
+            cursor: pointer;
+            background-color: #e9ecef; /* Very light grey buttons - Material You */
+            color: #212121; /* Very dark grey text - Material You */
+            transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.05);
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .buttons button:hover {
+            background-color: #dee2e6; /* Slightly darker hover - Material You */
+            transform: scale(1.05);
+            box-shadow: 0 4px 9px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .buttons button {
+            background-color: #4a4a4a; /* Dark grey buttons - Material You */
+            color: #f5f5f5; /* Very light grey text - Material You */
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .buttons button:hover {
+            background-color: #5e5e5e; /* Lighter dark hover - Material You */
+            transform: scale(1.05);
+            box-shadow: 0 4px 9px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode .buttons button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons button.operator {
+            background-color: #9c27b0; /* Purple operator - Material You */
+            color: #fff;
+        }
+
+        .dark-mode .buttons button.operator {
+            background-color: #ba68c8; /* Lighter purple for dark mode - Material You */
+        }
+
+        .buttons button.equal {
+            grid-column: span 1;
+            background-color: #4caf50; /* Green equal */
+            color: #fff;
+        }
+
+        .dark-mode .buttons button.equal {
+            background-color: #81c784;
+        }
+
+        .buttons button.zero {
+            grid-column: span 2;
+        }
+
+        .theme-switch-container {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: #fff;
+            border-radius: 12px; /* More rounded corners - Material You */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 90;
+        }
+
+        .theme-switch-container.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .dark-mode .theme-switch-container {
+            background-color: #303030;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .theme-switch span {
+            margin-left: 15px;
+            color: #757575; /* Medium grey text - Material You */
+            transition: color 0.3s ease;
+            font-size: 1.1em;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dark-mode .theme-switch span {
+            color: #b0bec5; /* Light grey text for dark mode - Material You */
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #9c27b0; /* Purple switch - Material You */
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #9c27b0;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Country Selection Styles */
+        .country-select-container {
+            margin-bottom: 20px;
+        }
+
+        .country-select-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #757575; /* Medium grey label - Material You */
+            font-size: 1.1em;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dark-mode .country-select-container label {
+            color: #b0bec5;
+        }
+
+        .country-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #cfd8dc; /* Light grey border - Material You */
+            border-radius: 8px; /* Rounded corners - Material You */
+            transition: border-color 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: #212121;
+        }
+
+        .dark-mode .country-select {
+            background-color: #424242;
+            color: #f5f5f5;
+            border-color: #757575;
+        }
+
+        .country-select:focus {
+            outline: none;
+            border-color: #9c27b0; /* Purple focus border - Material You */
+            box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+        }
+
+        /* Calculator Mode Styles */
+        .mode-select-container {
+            margin-bottom: 20px;
+        }
+
+        .mode-select-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #757575; /* Medium grey label - Material You */
+            font-size: 1.1em;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dark-mode .mode-select-container label {
+            color: #b0bec5;
+        }
+
+        .mode-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #cfd8dc; /* Light grey border - Material You */
+            border-radius: 8px; /* Rounded corners - Material You */
+            transition: border-color 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: #212121;
+        }
+
+        .dark-mode .mode-select {
+            background-color: #424242;
+            color: #f5f5f5;
+            border-color: #757575;
+        }
+
+        .mode-select:focus {
+            outline: none;
+            border-color: #9c27b0; /* Purple focus border - Material You */
+            box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <button class="settings-button">⚙</button>
+        <div class="calculator">
+            <div class="display">
+                <input type="text" id="result" value="0" disabled>
+            </div>
+            <div class="buttons">
+                <button onclick="clearDisplay()">C</button>
+                <button onclick="changeSign()">+/-</button>
+                <button onclick="performOperation('%')">%</button>
+                <button class="operator" onclick="setOperator('/')">÷</button>
+
+                <button onclick="appendNumber('7')">7</button>
+                <button onclick="appendNumber('8')">8</button>
+                <button onclick="appendNumber('9')">9</button>
+                <button class="operator" onclick="setOperator('*')">×</button>
+
+                <button onclick="appendNumber('4')">4</button>
+                <button onclick="appendNumber('5')">5</button>
+                <button onclick="appendNumber('6')">6</button>
+                <button class="operator" onclick="setOperator('-')">-</button>
+
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button class="operator" onclick="setOperator('+')">+</button>
+
+                <button onclick="appendNumber('0')" class="zero">0</button>
+                <button onclick="appendDecimal()">.</button>
+                <button class="equal" onclick="calculate()">=</button>
+            </div>
+        </div>
+        <div class="theme-switch-container">
+            <div class="theme-switch">
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                </label>
+                <span>Dark Mode</span>
+            </div>
+            <div class="country-select-container">
+                <label for="countrySelect">Select Country:</label>
+                <select id="countrySelect" class="country-select">
+                    <option value="us">United States</option>
+                    <option value="gb">United Kingdom</option>
+                    <option value="eu">Europe</option>
+                    <option value="jp">Japan</option>
+                    <option value="ca">Canada</option>
+                    <option value="sa">Saudi Arabia</option>
+                </select>
+            </div>
+            <div class="mode-select-container">
+                <label for="modeSelect">Select Mode:</label>
+                <select id="modeSelect" class="mode-select">
+                    <option value="basic">Basic</option>
+                    <option value="currency">Currency Converter</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <script>
+        let display = document.getElementById('result');
+        let currentInput = '';
+        let operator = null;
+        let firstOperand = null;
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const calculator = document.querySelector('.calculator');
+        const settingsButton = document.querySelector('.settings-button');
+        const themeSwitchContainer = document.querySelector('.theme-switch-container');
+        let settingsOpen = false;
+        const countrySelect = document.getElementById('countrySelect');
+        const modeSelect = document.getElementById('modeSelect');
+
+        // Load theme preference from local storage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            enableDarkMode();
+            themeToggle.checked = true;
+        }
+
+        // Event listener for country selection
+        countrySelect.addEventListener('change', function () {
+            const selectedCountry = this.value;
+            console.log('Selected Country:', selectedCountry);
+            // You can implement country-specific formatting or features here
+        });
+
+        // Event listener for mode selection
+        modeSelect.addEventListener('change', function () {
+            const selectedMode = this.value;
+            console.log('Selected Mode:', selectedMode);
+            // You can implement mode-specific calculator functionality here
+            switch (selectedMode) {
+                case 'basic':
+                    //show only basic
+                    break;
+                case 'currency':
+                    //show currency
+                    break;
+            }
+        });
+
+        function appendNumber(number) {
+            if (currentInput === '0' || currentInput === null || currentInput === 'Infinity' || currentInput === '-Infinity' || isNaN(parseFloat(currentInput))) {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            display.value = currentInput;
+        }
+
+        function setOperator(op) {
+            if (currentInput === '') return;
+            if (firstOperand !== null && operator !== null) {
+                calculate();
+            }
+            firstOperand = currentInput;
+            operator = op;
+            display.value = currentInput + " " + op; //show equation
+            currentInput = '';
+        }
+
+        function appendDecimal() {
+            if (currentInput.includes('.')) return;
+            currentInput += '.';
+            display.value = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            operator = null;
+            firstOperand = null;
+            display.value = currentInput;
+        }
+
+        function changeSign() {
+            if (currentInput !== '0' && currentInput !== '') {
+                currentInput = (parseFloat(currentInput) * -1).toString();
+                display.value = currentInput;
+            }
+        }
+
+        function performOperation(op) {
+            if (currentInput === '') return;
+            firstOperand = currentInput;
+            operator = op;
+            calculate();
+        }
+
+        function calculate() {
+            if (operator === null || firstOperand === null) return;
+            const num1 = parseFloat(firstOperand);
+            const num2 = parseFloat(currentInput);
+
+            // Prepare the data to send to the server
+            const data = {
+                num1: num1,
+                num2: num2,
+                operator: operator,
+                mode: modeSelect.value // Include the selected mode
+            };
+
+            // Use fetch to send a POST request to the server
+            fetch('/', { // Send to the root URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    display.value = data.error;
+                } else {
+                    display.value = data.result;
+                    currentInput = data.result.toString();
+                    firstOperand = null;
+                    operator = null;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                display.value = 'Error';
+            });
+        }
+
+        function enableDarkMode() {
+            body.classList.add('dark-mode');
+            calculator.classList.add('dark-mode');
+            themeSwitchContainer.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        }
+
+        function disableDarkMode() {
+            body.classList.remove('dark-mode');
+            calculator.classList.remove('dark-mode');
+            themeSwitchContainer.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+
+        themeToggle.addEventListener('change', function () {
+            if (this.checked) {
+                enableDarkMode();
+            } else {
+                disableDarkMode();
+            }
+        });
+
+        settingsButton.addEventListener('click', () => {
+            settingsButton.classList.add('spinning');
+            setTimeout(() => {
+                settingsButton.classList.remove('spinning');
+            }, 700);
+
+            settingsOpen = !settingsOpen;
+            themeSwitchContainer.classList.toggle('open', settingsOpen);
+            calculator.classList.toggle('slide-up', settingsOpen);
+        });
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            switch (key) {
+                case '0': appendNumber('0'); break;
+                case '1': appendNumber('1'); break;
+                case '2': appendNumber('2'); break;
+                case '3': appendNumber('3'); break;
+                case '4': appendNumber('4'); break;
+                case '5': appendNumber('5'); break;
+                case '6': appendNumber('6'); break;
+                case '7': appendNumber('7'); break;
+                case '8': appendNumber('8'); break;
+                case '9': appendNumber('9'); break;
+                case '+': setOperator('+'); break;
+                case '-': setOperator('-'); break;
+                case '*': setOperator('*'); break;
+                case '/': setOperator('/'); break;
+                case '.': appendDecimal(); break;
+                case '=':
+                case 'Enter': calculate(); break;
+                case 'Escape': clearDisplay(); break;
+                case 'Backspace':
+                    if (currentInput.length > 0) {
+                        currentInput = currentInput.slice(0, -1);
+                        display.value = currentInput;
+                    }
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
