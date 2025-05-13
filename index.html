@@ -3,641 +3,1452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator You</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Material You Inspired Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/function-plot@1.22.9/dist/function-plot.js"></script>
     <style>
-        /* Custom CSS for Material You Theme */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            /* Light Mode Colors */
+            --md-sys-color-primary-light: #7B5A00;
+            --md-sys-color-on-primary-light: #FFFFFF;
+            --md-sys-color-primary-container-light: #FFDF95;
+            --md-sys-color-on-primary-container-light: #261A00;
+            --md-sys-color-secondary-light: #5A624B;
+            --md-sys-color-on-secondary-light: #FFFFFF;
+            --md-sys-color-secondary-container-light: #DEE7C9;
+            --md-sys-color-on-secondary-container-light: #181E0C;
+            --md-sys-color-tertiary-light: #7A5552;
+            --md-sys-color-on-tertiary-light: #FFFFFF;
+            --md-sys-color-tertiary-container-light: #FFDAD6;
+            --md-sys-color-on-tertiary-container-light: #2E1313;
+            --md-sys-color-error-light: #BA1A1A;
+            --md-sys-color-error-container-light: #FFDAD6;
+            --md-sys-color-on-error-light: #FFFFFF;
+            --md-sys-color-on-error-container-light: #410002;
+            --md-sys-color-outline-light: #7A786E;
+            --md-sys-color-background-light: #FFFBFF;
+            --md-sys-color-on-background-light: #1E1C16;
+            --md-sys-color-surface-light: #FFFBFF;
+            --md-sys-color-on-surface-light: #1E1C16;
+            --md-sys-color-surface-variant-light: #E7E2D3;
+            --md-sys-color-on-surface-variant-light: #48473D;
+            --md-sys-color-inverse-surface-light: #33302A;
+            --md-sys-color-inverse-on-surface-light: #F6F1E9;
+            --md-sys-color-inverse-primary-light: #F6C749;
+            --md-sys-color-shadow-light: #000000;
+            --md-sys-color-surface-tint-light: #7B5A00;
+            --md-sys-color-outline-variant-light: #CAC7B8;
+            --md-sys-color-scrim-light: #000000;
+
+            /* Dark Mode Colors */
+            --md-sys-color-primary-dark: #F6C749;
+            --md-sys-color-on-primary-dark: #3F2D00;
+            --md-sys-color-primary-container-dark: #5B4300;
+            --md-sys-color-on-primary-container-dark: #FFDF95;
+            --md-sys-color-secondary-dark: #C2CBAD;
+            --md-sys-color-on-secondary-dark: #2D331F;
+            --md-sys-color-secondary-container-dark: #434A35;
+            --md-sys-color-on-secondary-container-dark: #DEE7C9;
+            --md-sys-color-tertiary-dark: #ECB9B6;
+            --md-sys-color-on-tertiary-dark: #462725;
+            --md-sys-color-tertiary-container-dark: #603D3B;
+            --md-sys-color-on-tertiary-container-dark: #FFDAD6;
+            --md-sys-color-error-dark: #FFB4AB;
+            --md-sys-color-error-container-dark: #93000A;
+            --md-sys-color-on-error-dark: #690005;
+            --md-sys-color-on-error-container-dark: #FFDAD6;
+            --md-sys-color-outline-dark: #949287;
+            --md-sys-color-background-dark: #1E1C16;
+            --md-sys-color-on-background-dark: #E9E2DA;
+            --md-sys-color-surface-dark: #1E1C16;
+            --md-sys-color-on-surface-dark: #E9E2DA;
+            --md-sys-color-surface-variant-dark: #48473D;
+            --md-sys-color-on-surface-variant-dark: #CAC7B8;
+            --md-sys-color-inverse-surface-dark: #E9E2DA;
+            --md-sys-color-inverse-on-surface-dark: #33302A;
+            --md-sys-color-inverse-primary-dark: #7B5A00;
+            --md-sys-color-shadow-dark: #000000;
+            --md-sys-color-surface-tint-dark: #F6C749;
+            --md-sys-color-outline-variant-dark: #48473D;
+            --md-sys-color-scrim-dark: #000000;
         }
 
         body {
-            font-family: 'Roboto', sans-serif; /* Using Roboto for Material You */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f3e5f5; /* Light purple background - Material You */
-            transition: background-color 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--md-sys-color-background-light);
+            color: var(--md-sys-color-on-background-light);
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        .dark-mode {
-            background-color: #1a1a1a; /* Dark background */
+        body.dark-mode {
+            background-color: var(--md-sys-color-background-dark);
+            color: var(--md-sys-color-on-background-dark);
         }
 
-        .calculator-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .settings-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 2.5em;
-            color: #9c27b0; /* Purple settings icon - Material You */
+        /* --- Navigation --- */
+        .calculator-nav-item {
+            transition: all 0.3s ease;
+            color: var(--md-sys-color-on-surface-variant-light);
+            padding: 0.75rem 1.25rem; /* Adjust padding */
+            border-radius: 9999px; /* Fully rounded */
             cursor: pointer;
-            transition: transform 0.7s ease-in-out, color 0.3s ease;
-            z-index: 100;
         }
 
-        .dark-mode .settings-button {
-            color: #ce93d8; /* Light purple for dark mode */
+        body.dark-mode .calculator-nav-item {
+             color: var(--md-sys-color-on-surface-variant-dark);
         }
 
-        .settings-button:hover {
-            color: #7b1fa2; /* Darker purple hover - Material You */
+        .calculator-nav-item.active {
+            background-color: var(--md-sys-color-primary-container-light);
+            color: var(--md-sys-color-on-primary-container-light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
         }
 
-        .settings-button.spinning {
-            animation: spin 1s linear;
+        body.dark-mode .calculator-nav-item.active {
+            background-color: var(--md-sys-color-primary-container-dark);
+            color: var(--md-sys-color-on-primary-container-dark);
         }
 
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
+         .calculator-nav-item:hover:not(.active) {
+             background-color: var(--md-sys-color-surface-variant-light);
+         }
+         body.dark-mode .calculator-nav-item:hover:not(.active) {
+             background-color: var(--md-sys-color-surface-variant-dark);
+         }
 
-        .calculator {
-            background-color: #fff; /* White calculator background - Material You */
-            border-radius: 20px; /* More rounded corners - Material You */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow - Material You */
+        /* --- Card Styling --- */
+        .card {
+            background-color: var(--md-sys-color-surface-light);
+            border-radius: 2rem; /* Increased rounding */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--md-sys-color-outline-variant-light);
             overflow: hidden;
-            width: 100%;
-            padding: 25px;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-            transform: scale(1.02);
-            opacity: 1;
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+            /* max-width: lg; /* Limit max width - removed to allow wider cards if needed */
+            margin-left: auto; /* Center the card */
+            margin-right: auto; /* Center the card */
+            padding: 1.5rem; /* Add padding inside the card */
         }
+         body.dark-mode .card {
+             background-color: var(--md-sys-color-surface-dark);
+             border-color: var(--md-sys-color-outline-variant-dark);
+         }
 
-        .calculator.slide-up {
-            transform: translateY(-30px) scale(0.9);
-            opacity: 0;
+        /* --- Input and Select Fields --- */
+        .input-field, .select-field {
+            background-color: var(--md-sys-color-surface-light);
+            border-radius: 1.5rem; /* Increased rounding */
+            border: 1px solid var(--md-sys-color-outline-light);
+            color: var(--md-sys-color-on-surface-light);
+            padding: 0.75rem 1rem; /* Adjusted padding */
+            font-size: 1rem; /* Adjusted font size */
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+            width: 100%; /* Ensure full width */
         }
+         body.dark-mode .input-field, body.dark-mode .select-field {
+             background-color: var(--md-sys-color-surface-dark);
+             border-color: var(--md-sys-color-outline-dark);
+             color: var(--md-sys-color-on-surface-dark);
+         }
 
-        .dark-mode .calculator {
-            background-color: #303030; /* Dark grey calculator background - Material You */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .display {
-            margin-bottom: 25px;
-            animation: slideInDisplay 0.7s ease-out;
-        }
-
-        @keyframes slideInDisplay {
-            from {
-                transform: translateY(-40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .display input {
-            width: 100%;
-            padding: 20px;
-            font-size: 36px; /* Larger font size - Material You */
-            text-align: right;
-            border: none;
-            border-radius: 12px; /* More rounded corners - Material You */
-            background-color: #f8f0fb; /* Very light purple display - Material You */
-            color: #212121; /* Very dark grey text - Material You */
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .dark-mode .display input {
-            background-color: #424242; /* Darker grey display - Material You */
-            color: #f5f5f5; /* Very light grey text - Material You */
-        }
-
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 12px;
-            animation: fadeInButtons 0.7s ease-out 0.3s forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeInButtons {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .buttons button {
-            padding: 18px;
-            font-size: 24px;
-            border: none;
-            border-radius: 12px; /* More rounded corners - Material You */
-            cursor: pointer;
-            background-color: #e9ecef; /* Very light grey buttons - Material You */
-            color: #212121; /* Very dark grey text - Material You */
-            transition: background-color 0.2s ease, transform 0.1s ease, color 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.05);
+        .input-field:focus, .select-field:focus {
             outline: none;
-            font-family: 'Roboto', sans-serif;
+            border-color: var(--md-sys-color-primary-light);
+            box-shadow: 0 0 0 2px var(--md-sys-color-primary-light); /* Slightly thicker focus ring */
+        }
+         body.dark-mode .input-field:focus, body.dark-mode .select-field:focus {
+             border-color: var(--md-sys-color-primary-dark);
+             box-shadow: 0 0 0 2px var(--md-sys-color-primary-dark);
+         }
+
+         label {
+             color: var(--md-sys-color-on-surface-variant-light);
+             font-weight: 500;
+             margin-bottom: 0.5rem;
+             display: block; /* Ensure label takes full width */
+             transition: color 0.5s ease;
+             font-size: 0.875rem; /* Smaller label */
+         }
+          body.dark-mode label {
+              color: var(--md-sys-color-on-surface-variant-dark);
+          }
+
+        /* --- Buttons --- */
+        .btn-primary, .btn-secondary {
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.75rem 1.5rem; /* Adjusted padding */
+            font-weight: 500;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 0.9rem; /* Slightly smaller button text */
+        }
+        .btn-primary:hover, .btn-secondary:hover {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+        .btn-primary:active, .btn-secondary:active {
+             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+             transform: scale(0.98); /* Add subtle press effect */
         }
 
-        .buttons button:hover {
-            background-color: #dee2e6; /* Slightly darker hover - Material You */
-            transform: scale(1.05);
-            box-shadow: 0 4px 9px rgba(0, 0, 0, 0.1);
+        .btn-primary {
+            background-color: var(--md-sys-color-primary-light);
+            color: var(--md-sys-color-on-primary-light);
+        }
+        .btn-primary:hover {
+            background-color: var(--md-sys-color-primary-container-light);
+            color: var(--md-sys-color-on-primary-container-light);
+        }
+         body.dark-mode .btn-primary {
+             background-color: var(--md-sys-color-primary-dark);
+             color: var(--md-sys-color-on-primary-dark);
+         }
+          body.dark-mode .btn-primary:hover {
+             background-color: var(--md-sys-color-primary-container-dark);
+             color: var(--md-sys-color-on-primary-container-dark);
+         }
+
+         .btn-secondary {
+            background-color: var(--md-sys-color-secondary-container-light);
+            color: var(--md-sys-color-on-secondary-container-light);
+         }
+         body.dark-mode .btn-secondary {
+             background-color: var(--md-sys-color-secondary-container-dark);
+             color: var(--md-sys-color-on-secondary-container-dark);
+         }
+         .btn-secondary:hover {
+             background-color: var(--md-sys-color-surface-variant-light);
+         }
+          body.dark-mode .btn-secondary:hover {
+             background-color: var(--md-sys-color-surface-variant-dark);
+         }
+
+        /* --- Calculator Content Area --- */
+        #calculator-content {
+             position: relative;
+             overflow: hidden;
+             /* Removed min-height to prevent forced scrolling */
         }
 
-        .buttons button:active {
-            transform: scale(0.95);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode .buttons button {
-            background-color: #4a4a4a; /* Dark grey buttons - Material You */
-            color: #f5f5f5; /* Very light grey text - Material You */
-            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode .buttons button:hover {
-            background-color: #5e5e5e; /* Lighter dark hover - Material You */
-            transform: scale(1.05);
-            box-shadow: 0 4px 9px rgba(0, 0, 0, 0.2);
-        }
-
-        .dark-mode .buttons button:active {
-            transform: scale(0.95);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .buttons button.operator {
-            background-color: #9c27b0; /* Purple operator - Material You */
-            color: #fff;
-        }
-
-        .dark-mode .buttons button.operator {
-            background-color: #ba68c8; /* Lighter purple for dark mode - Material You */
-        }
-
-        .buttons button.equal {
-            grid-column: span 1;
-            background-color: #4caf50; /* Green equal */
-            color: #fff;
-        }
-
-        .dark-mode .buttons button.equal {
-            background-color: #81c784;
-        }
-
-        .buttons button.zero {
-            grid-column: span 2;
-        }
-
-        .theme-switch-container {
+        .calculator-section {
             position: absolute;
-            top: 80px;
-            right: 20px;
-            background-color: #fff;
-            border-radius: 12px; /* More rounded corners - Material You */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-            z-index: 90;
-        }
-
-        .theme-switch-container.open {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
-        .dark-mode .theme-switch-container {
-            background-color: #303030;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .theme-switch {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .theme-switch span {
-            margin-left: 15px;
-            color: #757575; /* Medium grey text - Material You */
-            transition: color 0.3s ease;
-            font-size: 1.1em;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .dark-mode .theme-switch span {
-            color: #b0bec5; /* Light grey text for dark mode - Material You */
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 30px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 30px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #9c27b0; /* Purple switch - Material You */
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px #9c27b0;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        /* Country Selection Styles */
-        .country-select-container {
-            margin-bottom: 20px;
-        }
-
-        .country-select-container label {
-            display: block;
-            margin-bottom: 8px;
-            color: #757575; /* Medium grey label - Material You */
-            font-size: 1.1em;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .dark-mode .country-select-container label {
-            color: #b0bec5;
-        }
-
-        .country-select {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #cfd8dc; /* Light grey border - Material You */
-            border-radius: 8px; /* Rounded corners - Material You */
-            transition: border-color 0.3s ease;
-            font-family: 'Roboto', sans-serif;
-            background-color: #fff;
-            color: #212121;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            pointer-events: none;
+            padding-top: 1rem; /* Add some space at the top */
         }
 
-        .dark-mode .country-select {
-            background-color: #424242;
-            color: #f5f5f5;
-            border-color: #757575;
+        .calculator-section.active {
+            position: relative; /* Change from absolute when active */
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            pointer-events: auto;
         }
 
-        .country-select:focus {
-            outline: none;
-            border-color: #9c27b0; /* Purple focus border - Material You */
-            box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+         .calculator-section:not(.active) {
+             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out 0.1s, visibility 0.5s ease-in-out 0.1s;
+         }
+
+        /* --- Result Display --- */
+        .result-display-container { /* Container for both displays */
+            background-color: var(--md-sys-color-secondary-container-light);
+            color: var(--md-sys-color-on-secondary-container-light);
+            border-radius: 1.5rem; /* Increased rounding */
+            padding: 0.75rem 1.5rem; /* Adjusted padding */
+            margin-top: 1rem; /* Adjusted margin */
+            margin-bottom: 1.5rem; /* Add margin below */
+            text-align: right; /* Align text to the right */
+            transition: background-color 0.5s ease, color 0.5s ease;
+            min-height: 80px; /* Give it a minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+         body.dark-mode .result-display-container {
+             background-color: var(--md-sys-color-secondary-container-dark);
+             color: var(--md-sys-color-on-secondary-container-dark);
+         }
+
+        .secondary-display { /* For showing the expression */
+            font-size: 0.9rem;
+            opacity: 0.7;
+            min-height: 1.25rem; /* Ensure space even when empty */
+            word-wrap: break-word;
+            overflow-x: auto; /* Scroll if expression gets too long */
         }
 
-        /* Calculator Mode Styles */
-        .mode-select-container {
-            margin-bottom: 20px;
+        .result-display { /* Main result/input display */
+            font-size: 1.75rem; /* Adjusted font size */
+            font-weight: 700;
+            word-wrap: break-word;
+            overflow-x: auto;
+            min-height: 30px; /* Min height for the main number */
+            /* Remove background/padding as it's now in the container */
         }
 
-        .mode-select-container label {
-            display: block;
-            margin-bottom: 8px;
-            color: #757575; /* Medium grey label - Material You */
-            font-size: 1.1em;
-            font-family: 'Roboto', sans-serif;
-        }
 
-        .dark-mode .mode-select-container label {
-            color: #b0bec5;
+        .result-label { /* This class wasn't used, but keeping for potential future use */
+            color: var(--md-sys-color-on-secondary-container-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+            transition: color 0.5s ease, opacity 0.5s ease;
         }
+         body.dark-mode .result-label {
+             color: var(--md-sys-color-on-secondary-container-dark);
+         }
 
-        .mode-select {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #cfd8dc; /* Light grey border - Material You */
-            border-radius: 8px; /* Rounded corners - Material You */
-            transition: border-color 0.3s ease;
-            font-family: 'Roboto', sans-serif;
-            background-color: #fff;
-            color: #212121;
+         .error-message {
+             color: var(--md-sys-color-error-light);
+             font-weight: 500;
+             transition: color 0.5s ease;
+             font-size: 0.875rem;
+             min-height: 1.25rem; /* Reserve space for error messages */
+         }
+         body.dark-mode .error-message {
+             color: var(--md-sys-color-error-dark);
+         }
+
+         /* --- Basic/Scientific Calculator Grid --- */
+         .calculator-grid {
+             display: grid;
+             grid-template-columns: repeat(4, 1fr);
+             gap: 0.75rem; /* Slightly reduced gap */
+             padding: 0.5rem; /* Add padding around the grid */
+         }
+
+         .calculator-grid button {
+             width: 100%;
+             padding: 1rem 0; /* Adjusted padding */
+             font-size: 1.25rem; /* Adjusted font size */
+             border-radius: 9999px; /* Fully rounded */
+             border: none;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             transition: background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
+             color: var(--md-sys-color-on-surface-light);
+             background-color: var(--md-sys-color-surface-variant-light);
+             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+             height: 60px; /* Fixed height for buttons */
+             cursor: pointer; /* Ensure cursor indicates clickable */
+         }
+         body.dark-mode .calculator-grid button {
+             color: var(--md-sys-color-on-surface-variant-dark);
+             background-color: var(--md-sys-color-surface-variant-dark);
+         }
+
+        .calculator-grid button:hover {
+             background-color: var(--md-sys-color-outline-variant-light);
+             filter: brightness(95%); /* Slight darken on hover */
+         }
+          body.dark-mode .calculator-grid button:hover {
+             background-color: var(--md-sys-color-outline-variant-dark);
+              filter: brightness(110%); /* Slight lighten on hover */
+         }
+
+         .calculator-grid button:active {
+             box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); /* Inset shadow on press */
+             transform: scale(0.98);
+             filter: brightness(90%);
+         }
+          body.dark-mode .calculator-grid button:active {
+             filter: brightness(120%);
+         }
+
+
+         .calculator-grid button.operator {
+             background-color: var(--md-sys-color-tertiary-container-light);
+             color: var(--md-sys-color-on-tertiary-container-light);
+             transition: background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
+         }
+          body.dark-mode .calculator-grid button.operator {
+             background-color: var(--md-sys-color-tertiary-container-dark);
+             color: var(--md-sys-color-on-tertiary-container-dark);
+         }
+
+         .calculator-grid button.operator:hover {
+             filter: brightness(95%);
+         }
+          body.dark-mode .calculator-grid button.operator:hover {
+             filter: brightness(110%);
+         }
+
+         .calculator-grid button.equals {
+            background-color: var(--md-sys-color-primary-light);
+            color: var(--md-sys-color-on-primary-light);
+            grid-column: span 2;
+            transition: background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
+         }
+          body.dark-mode .calculator-grid button.equals {
+             background-color: var(--md-sys-color-primary-dark);
+             color: var(--md-sys-color-on-primary-dark);
+         }
+
+         .calculator-grid button.equals:hover {
+            background-color: var(--md-sys-color-primary-container-light);
+            color: var(--md-sys-color-on-primary-container-light);
+            filter: brightness(98%);
+         }
+          body.dark-mode .calculator-grid button.equals:hover {
+             background-color: var(--md-sys-color-primary-container-dark);
+             color: var(--md-sys-color-on-primary-container-dark);
+             filter: brightness(105%);
+         }
+
+         .calculator-grid button.zero {
+             grid-column: span 2;
+         }
+
+         /* --- Graph Container --- */
+         #graph-container {
+             width: 100%;
+             height: 350px; /* Reduced height */
+             margin-top: 1.5rem;
+             border: 1px solid var(--md-sys-color-outline-variant-light);
+             border-radius: 1.5rem; /* Rounded corners */
+             background-color: var(--md-sys-color-surface-light);
+             transition: background-color 0.5s ease, border-color 0.5s ease;
+         }
+         body.dark-mode #graph-container {
+             background-color: var(--md-sys-color-surface-dark);
+             border-color: var(--md-sys-color-outline-variant-dark);
+         }
+
+         /* Styling for radio button group for Loan Interest Type */
+        .interest-type-group label {
+            display: inline-flex; /* Align items in a row */
+            align-items: center; /* Vertically center items */
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem; /* Match input field rounding */
+            border: 1px solid var(--md-sys-color-outline-light);
+            background-color: var(--md-sys-color-surface-light);
+            color: var(--md-sys-color-on-surface-variant-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem; /* Spacing between radio buttons */
+            font-size: 0.875rem;
         }
-
-        .dark-mode .mode-select {
-            background-color: #424242;
-            color: #f5f5f5;
-            border-color: #757575;
+        body.dark-mode .interest-type-group label {
+            border-color: var(--md-sys-color-outline-dark);
+            background-color: var(--md-sys-color-surface-dark);
+            color: var(--md-sys-color-on-surface-variant-dark);
         }
-
-        .mode-select:focus {
-            outline: none;
-            border-color: #9c27b0; /* Purple focus border - Material You */
-            box-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+        .interest-type-group input[type="radio"] {
+            display: none; /* Hide the actual radio button */
+        }
+        .interest-type-group input[type="radio"]:checked + label {
+            background-color: var(--md-sys-color-primary-container-light);
+            color: var(--md-sys-color-on-primary-container-light);
+            border-color: var(--md-sys-color-primary-light);
+            box-shadow: 0 0 0 1px var(--md-sys-color-primary-light);
+        }
+        body.dark-mode .interest-type-group input[type="radio"]:checked + label {
+            background-color: var(--md-sys-color-primary-container-dark);
+            color: var(--md-sys-color-on-primary-container-dark);
+            border-color: var(--md-sys-color-primary-dark);
+            box-shadow: 0 0 0 1px var(--md-sys-color-primary-dark);
+        }
+        .interest-type-group label:hover {
+            border-color: var(--md-sys-color-primary-light);
+        }
+        body.dark-mode .interest-type-group label:hover {
+            border-color: var(--md-sys-color-primary-dark);
         }
 
     </style>
 </head>
-<body>
-    <div class="calculator-container">
-        <button class="settings-button">⚙</button>
-        <div class="calculator">
-            <div class="display">
-                <input type="text" id="result" value="0" disabled>
-            </div>
-            <div class="buttons">
-                <button onclick="clearDisplay()">C</button>
-                <button onclick="changeSign()">+/-</button>
-                <button onclick="performOperation('%')">%</button>
-                <button class="operator" onclick="setOperator('/')">÷</button>
+<body class="dark-mode"> <div class="container mx-auto p-4 md:p-6 lg:p-8 max-w-4xl"> <header class="flex justify-between items-center mb-6 md:mb-8">
+            <h1 class="text-xl md:text-2xl lg:text-3xl font-semibold">
+                <i class="fas fa-calculator mr-2"></i> My Calculator
+            </h1>
+            <button id="theme-toggle" class="btn-secondary flex items-center">
+                <i class="fas fa-moon dark:fa-sun mr-2"></i> <span id="theme-text">Dark</span>
+            </button>
+        </header>
 
-                <button onclick="appendNumber('7')">7</button>
-                <button onclick="appendNumber('8')">8</button>
-                <button onclick="appendNumber('9')">9</button>
-                <button class="operator" onclick="setOperator('*')">×</button>
+        <nav class="mb-6 md:mb-8 overflow-x-auto pb-2">
+            <ul class="flex space-x-2 md:space-x-4 lg:space-x-6 whitespace-nowrap">
+                <li class="calculator-nav-item active p-2 px-4 text-sm" data-target="basic-calculator">
+                    <i class="fas fa-calculator mr-1"></i> Basic
+                </li>
+                <li class="calculator-nav-item p-2 px-4 text-sm" data-target="scientific-calculator">
+                    <i class="fas fa-flask mr-1"></i> Scientific
+                </li>
+                <li class="calculator-nav-item p-2 px-4 text-sm" data-target="currency-exchange-calculator">
+                    <i class="fas fa-money-bill-wave mr-1"></i> Currency
+                </li>
+                <li class="calculator-nav-item p-2 px-4 text-sm" data-target="unit-conversion-calculator">
+                    <i class="fas fa-ruler-combined mr-1"></i> Unit
+                </li>
+                 <li class="calculator-nav-item p-2 px-4 text-sm" data-target="loan-calculator">
+                    <i class="fas fa-hand-holding-usd mr-1"></i> Loan
+                </li>
+                <li class="calculator-nav-item p-2 px-4 text-sm" data-target="graphing-calculator">
+                    <i class="fas fa-chart-line mr-1"></i> Graphing
+                </li>
+            </ul>
+        </nav>
 
-                <button onclick="appendNumber('4')">4</button>
-                <button onclick="appendNumber('5')">5</button>
-                <button onclick="appendNumber('6')">6</button>
-                <button class="operator" onclick="setOperator('-')">-</button>
+        <div id="calculator-content" class="relative"> <section id="basic-calculator" class="calculator-section active">
+                <div class="card max-w-sm mx-auto"> <div class="result-display-container">
+                        <div class="secondary-display" id="basic-secondary-display">&nbsp;</div> <div class="result-display" id="basic-result">0</div> </div>
+                    <div class="calculator-grid">
+                        <button class="btn-secondary clear" onclick="clearDisplay()">C</button>
+                        <button class="operator" onclick="handleOperator('/')">÷</button>
+                        <button class="operator" onclick="handleOperator('*')">×</button>
+                        <button class="btn-secondary" onclick="backspace()">DEL</button>
+                        <button onclick="inputDigit('7')">7</button>
+                        <button onclick="inputDigit('8')">8</button>
+                        <button onclick="inputDigit('9')">9</button>
+                        <button class="operator" onclick="handleOperator('-')">-</button>
+                        <button onclick="inputDigit('4')">4</button>
+                        <button onclick="inputDigit('5')">5</button>
+                        <button onclick="inputDigit('6')">6</button>
+                        <button class="operator" onclick="handleOperator('+')">+</button>
+                        <button onclick="inputDigit('1')">1</button>
+                        <button onclick="inputDigit('2')">2</button>
+                        <button onclick="inputDigit('3')">3</button>
+                        <button class="equals" onclick="calculate()">=</button> <button class="zero" onclick="inputDigit('0')">0</button> <button onclick="inputDecimal()">.</button>
+                        </div>
+                </div>
+            </section>
 
-                <button onclick="appendNumber('1')">1</button>
-                <button onclick="appendNumber('2')">2</button>
-                <button onclick="appendNumber('3')">3</button>
-                <button class="operator" onclick="setOperator('+')">+</button>
+            <section id="scientific-calculator" class="calculator-section">
+                 <div class="card max-w-md mx-auto"> <div class="result-display-container">
+                        <div class="secondary-display" id="scientific-secondary-display">&nbsp;</div>
+                        <div class="result-display" id="scientific-result">0</div>
+                     </div>
+                    <div class="grid grid-cols-5 gap-2 p-2"> <button class="btn-secondary text-xs" onclick="setMode('deg')">deg</button>
+                        <button class="btn-secondary text-xs" onclick="setMode('rad')">rad</button>
+                        <button class="btn-secondary text-xs" onclick="calculateScientific('inv')">Inv</button>
+                        <button class="btn-secondary clear col-span-1" onclick="clearDisplayScientific()">C</button> <button class="btn-secondary col-span-1" onclick="backspaceScientific()">DEL</button> <button class="btn-secondary" onclick="calculateScientific('sin')">sin</button>
+                        <button class="btn-secondary" onclick="calculateScientific('cos')">cos</button>
+                        <button class="btn-secondary" onclick="calculateScientific('tan')">tan</button>
+                        <button class="btn-secondary" onclick="appendOperatorScientific('**')">xʸ</button>
+                        <button class="btn-secondary" onclick="calculateScientific('sqrt')">√</button>
 
-                <button onclick="appendNumber('0')" class="zero">0</button>
-                <button onclick="appendDecimal()">.</button>
-                <button class="equal" onclick="calculate()">=</button>
-            </div>
-        </div>
-        <div class="theme-switch-container">
-            <div class="theme-switch">
-                <label class="switch">
-                    <input type="checkbox" id="themeToggle">
-                    <span class="slider round"></span>
-                </label>
-                <span>Dark Mode</span>
-            </div>
-            <div class="country-select-container">
-                <label for="countrySelect">Select Country:</label>
-                <select id="countrySelect" class="country-select">
-                    <option value="us">United States</option>
-                    <option value="gb">United Kingdom</option>
-                    <option value="eu">Europe</option>
-                    <option value="jp">Japan</option>
-                    <option value="ca">Canada</option>
-                    <option value="sa">Saudi Arabia</option>
-                </select>
-            </div>
-            <div class="mode-select-container">
-                <label for="modeSelect">Select Mode:</label>
-                <select id="modeSelect" class="mode-select">
-                    <option value="basic">Basic</option>
-                    <option value="currency">Currency Converter</option>
-                </select>
-            </div>
+                        <button class="btn-secondary" onclick="calculateScientific('log')">log</button>
+                        <button class="btn-secondary" onclick="calculateScientific('ln')">ln</button>
+                        <button class="btn-secondary" onclick="appendOperatorScientific('(')">(</button>
+                        <button class="btn-secondary" onclick="appendOperatorScientific(')')">)</button>
+                        <button class="btn-secondary" onclick="calculateScientific('fact')">n!</button>
+
+                        <button onclick="appendNumberScientific('7')">7</button>
+                        <button onclick="appendNumberScientific('8')">8</button>
+                        <button onclick="appendNumberScientific('9')">9</button>
+                        <button class="operator" onclick="appendOperatorScientific('/')">÷</button>
+                        <button class="btn-secondary" onclick="calculateScientific('pi')">π</button>
+
+                        <button onclick="appendNumberScientific('4')">4</button>
+                        <button onclick="appendNumberScientific('5')">5</button>
+                        <button onclick="appendNumberScientific('6')">6</button>
+                        <button class="operator" onclick="appendOperatorScientific('*')">×</button>
+                        <button class="btn-secondary" onclick="calculateScientific('e')">e</button>
+
+                        <button onclick="appendNumberScientific('1')">1</button>
+                        <button onclick="appendNumberScientific('2')">2</button>
+                        <button onclick="appendNumberScientific('3')">3</button>
+                        <button class="operator" onclick="appendOperatorScientific('-')">-</button>
+                        <button class="equals row-span-2" onclick="calculateScientific('=')">=</button> <button class="zero col-span-2" onclick="appendNumberScientific('0')">0</button> <button onclick="appendDecimalScientific()">.</button>
+                        <button class="operator" onclick="appendOperatorScientific('+')">+</button>
+                        </div>
+                </div>
+            </section>
+
+            <section id="currency-exchange-calculator" class="calculator-section">
+                <div class="card max-w-lg mx-auto"> <h2 class="text-lg font-semibold mb-4 text-center">Currency Exchange</h2>
+                    <div class="mb-4">
+                        <label for="amount" class="block text-sm font-medium">Amount</label>
+                        <input type="number" id="amount" placeholder="Enter amount" class="input-field" value="100">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 mb-4 items-center">
+                        <div>
+                            <label for="from-currency" class="block text-sm font-medium">From</label>
+                            <select id="from-currency" class="select-field">
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                            </select>
+                        </div>
+                         <div class="text-center"> <button id="swap-currency" class="btn-secondary p-2 mt-4"><i class="fas fa-exchange-alt"></i></button>
+                         </div>
+                        <div>
+                            <label for="to-currency" class="block text-sm font-medium">To</label>
+                            <select id="to-currency" class="select-field">
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                            </select>
+                        </div>
+                         </div>
+                    <button id="convert-currency" class="btn-primary w-full mt-2">Convert</button>
+                     <div class="result-display-container mt-4">
+                        <div class="secondary-display">&nbsp;</div> <div class="result-display" id="currency-result"></div> </div>
+                    <p id="currency-error" class="error-message mt-2 text-center"></p>
+                </div>
+            </section>
+
+            <section id="unit-conversion-calculator" class="calculator-section">
+                <div class="card max-w-lg mx-auto"> <h2 class="text-lg font-semibold mb-4 text-center">Unit Conversion</h2>
+                    <div class="mb-4">
+                        <label for="unit-value" class="block text-sm font-medium">Value</label>
+                        <input type="number" id="unit-value" placeholder="Enter value" class="input-field" value="1">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="from-unit-type" class="block text-sm font-medium">From Type</label>
+                            <select id="from-unit-type" class="select-field mb-2">
+                                <option value="length">Length</option>
+                                <option value="mass">Mass</option>
+                                <option value="temperature">Temperature</option>
+                                <option value="time">Time</option>
+                                <option value="area">Area</option>
+                                <option value="volume">Volume</option>
+                            </select>
+                            <label for="from-unit" class="block text-sm font-medium">From Unit</label>
+                            <select id="from-unit" class="select-field">
+                                </select>
+                        </div>
+                        <div>
+                            <label for="to-unit-type" class="block text-sm font-medium">To Type</label>
+                             <select id="to-unit-type" class="select-field mb-2">
+                                <option value="length">Length</option>
+                                <option value="mass">Mass</option>
+                                <option value="temperature">Temperature</option>
+                                <option value="time">Time</option>
+                                <option value="area">Area</option>
+                                <option value="volume">Volume</option>
+                            </select>
+                            <label for="to-unit" class="block text-sm font-medium">To Unit</label>
+                            <select id="to-unit" class="select-field">
+                                </select>
+                        </div>
+                    </div>
+                    <button id="convert-unit" class="btn-primary w-full">Convert</button>
+                     <div class="result-display-container mt-4">
+                        <div class="secondary-display">&nbsp;</div> <div class="result-display" id="unit-result"></div> </div>
+                    <p id="unit-error" class="error-message mt-2 text-center"></p>
+                </div>
+            </section>
+
+            <section id="loan-calculator" class="calculator-section">
+                <div class="card max-w-lg mx-auto"> <h2 class="text-lg font-semibold mb-4 text-center">Loan Calculator</h2>
+                    <div class="mb-3">
+                        <label for="loan-amount" class="block text-sm font-medium">Loan Amount ($)</label>
+                        <input type="number" id="loan-amount" placeholder="e.g., 10000" class="input-field" value="10000">
+                    </div>
+                    <div class="mb-3">
+                        <label for="interest-rate" class="block text-sm font-medium">Annual Interest Rate (%)</label>
+                        <input type="number" id="interest-rate" placeholder="e.g., 5" class="input-field" value="5">
+                    </div>
+                    <div class="mb-3">
+                        <label for="loan-term" class="block text-sm font-medium">Loan Term (Years)</label>
+                        <input type="number" id="loan-term" placeholder="e.g., 5" class="input-field" value="5">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Interest Type</label>
+                        <div class="interest-type-group flex">
+                            <input type="radio" id="compound-interest" name="interest-type" value="compound" checked class="hidden">
+                            <label for="compound-interest" class="mr-2">Compound</label>
+
+                            <input type="radio" id="simple-interest" name="interest-type" value="simple" class="hidden">
+                            <label for="simple-interest">Simple</label>
+                        </div>
+                    </div>
+                    <button id="calculate-loan" class="btn-primary w-full mt-2">Calculate</button>
+                    <div class="result-display-container mt-4" id="loan-result-container">
+                        <div class="secondary-display">&nbsp;</div> <div class="result-display" id="loan-result"></div> </div>
+                    <p id="loan-error" class="error-message mt-2 text-center"></p>
+                </div>
+            </section>
+
+            <section id="graphing-calculator" class="calculator-section">
+                <div class="card max-w-lg mx-auto"> <h2 class="text-lg font-semibold mb-4 text-center">Graphing Calculator</h2>
+                    <div class="mb-3">
+                        <label for="function-input" class="block text-sm font-medium">f(x) =</label>
+                        <input type="text" id="function-input" placeholder="e.g., x^2, sin(x)" class="input-field" value="x^2">
+                    </div>
+                     <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <label for="xmin" class="block text-sm font-medium">X Min</label>
+                            <input type="number" id="xmin" class="input-field" value="-10">
+                        </div>
+                        <div>
+                           <label for="xmax" class="block text-sm font-medium">X Max</label>
+                           <input type="number" id="xmax" class="input-field" value="10">
+                        </div>
+                    </div>
+                    <button id="plot-graph" class="btn-primary w-full">Plot Graph</button>
+                    <div id="graph-container" class="mt-4"></div> <p id="graph-error" class="error-message mt-2 text-center"></p>
+                </div>
+            </section>
         </div>
     </div>
+
     <script>
-        let display = document.getElementById('result');
-        let currentInput = '';
-        let operator = null;
-        let firstOperand = null;
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
-        const calculator = document.querySelector('.calculator');
-        const settingsButton = document.querySelector('.settings-button');
-        const themeSwitchContainer = document.querySelector('.theme-switch-container');
-        let settingsOpen = false;
-        const countrySelect = document.getElementById('countrySelect');
-        const modeSelect = document.getElementById('modeSelect');
+        // --- Global State & Constants ---
+        const DEBUG = true; // Set to true for console logs
+        let isDarkMode = document.body.classList.contains('dark-mode');
+        let scientificMode = 'deg'; // 'deg' or 'rad'
+        let inverseMode = false; // For scientific inverse functions
 
-        // Load theme preference from local storage
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            enableDarkMode();
-            themeToggle.checked = true;
+        // --- DOM Elements ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeText = document.getElementById('theme-text');
+        const calculatorNavItems = document.querySelectorAll('.calculator-nav-item');
+        const calculatorSections = document.querySelectorAll('.calculator-section');
+        const calculatorContent = document.getElementById('calculator-content');
+
+        // Basic Calc Elements
+        const basicResultDisplay = document.getElementById('basic-result');
+        const basicSecondaryDisplay = document.getElementById('basic-secondary-display');
+
+        // Scientific Calc Elements
+        const scientificResultDisplay = document.getElementById('scientific-result');
+        const scientificSecondaryDisplay = document.getElementById('scientific-secondary-display');
+
+        // Currency Calc Elements
+        const amountInput = document.getElementById('amount');
+        const fromCurrencySelect = document.getElementById('from-currency');
+        const toCurrencySelect = document.getElementById('to-currency');
+        const convertCurrencyBtn = document.getElementById('convert-currency');
+        const currencyResultDisplay = document.getElementById('currency-result');
+        const currencyError = document.getElementById('currency-error');
+        const swapCurrencyBtn = document.getElementById('swap-currency');
+
+        // Unit Conv Elements
+        const unitValueInput = document.getElementById('unit-value');
+        const fromUnitTypeSelect = document.getElementById('from-unit-type');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitTypeSelect = document.getElementById('to-unit-type');
+        const toUnitSelect = document.getElementById('to-unit');
+        const convertUnitBtn = document.getElementById('convert-unit');
+        const unitResultDisplay = document.getElementById('unit-result');
+        const unitError = document.getElementById('unit-error');
+
+        // Loan Calc Elements
+        const loanAmountInput = document.getElementById('loan-amount');
+        const interestRateInput = document.getElementById('interest-rate');
+        const loanTermInput = document.getElementById('loan-term');
+        const calculateLoanBtn = document.getElementById('calculate-loan');
+        const loanResultContainer = document.getElementById('loan-result-container');
+        const loanResultDisplay = document.getElementById('loan-result');
+        const loanSecondaryDisplay = loanResultContainer.querySelector('.secondary-display');
+        const loanError = document.getElementById('loan-error');
+        // New: Loan Interest Type Radio Buttons
+        const loanInterestTypeRadios = document.querySelectorAll('input[name="interest-type"]');
+
+
+        // Graphing Calc Elements
+        const functionInput = document.getElementById('function-input');
+        const plotGraphBtn = document.getElementById('plot-graph');
+        const graphContainer = document.getElementById('graph-container');
+        const graphError = document.getElementById('graph-error');
+        const xminInput = document.getElementById('xmin');
+        const xmaxInput = document.getElementById('xmax');
+
+        // --- Helper Functions ---
+        function log(...args) {
+            if (DEBUG) {
+                console.log('[CALC]', ...args);
+            }
         }
 
-        // Event listener for country selection
-        countrySelect.addEventListener('change', function () {
-            const selectedCountry = this.value;
-            console.log('Selected Country:', selectedCountry);
-            // You can implement country-specific formatting or features here
-        });
+        function isBasicCalculatorActive() {
+             const activeNavItem = document.querySelector('.calculator-nav-item.active');
+             return activeNavItem && activeNavItem.dataset.target === 'basic-calculator';
+        }
 
-        // Event listener for mode selection
-        modeSelect.addEventListener('change', function () {
-            const selectedMode = this.value;
-            console.log('Selected Mode:', selectedMode);
-            // You can implement mode-specific calculator functionality here
-            switch (selectedMode) {
-                case 'basic':
-                    //show only basic
-                    break;
-                case 'currency':
-                    //show currency
-                    break;
+        function updateActiveNav(targetId) {
+            log('Updating active nav to:', targetId);
+            calculatorNavItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.target === targetId);
+            });
+            calculatorSections.forEach(section => {
+                section.classList.toggle('active', section.id === targetId);
+            });
+
+            if (targetId === 'graphing-calculator') {
+                 if (typeof functionPlot === 'function') {
+                    setTimeout(plotGraph, 50);
+                 } else {
+                     console.error("functionPlot library not loaded yet.");
+                     graphError.textContent = "Graphing library loading...";
+                     setTimeout(plotGraph, 500);
+                 }
             }
-        });
+        }
 
-        function appendNumber(number) {
-            if (currentInput === '0' || currentInput === null || currentInput === 'Infinity' || currentInput === '-Infinity' || isNaN(parseFloat(currentInput))) {
-                currentInput = number;
+        function debounce(func, delay) {
+            let timeoutId;
+            return function(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        // --- Basic Calculator State & Functions ---
+        let basicDisplayValue = '0';
+        let basicFirstOperand = null;
+        let basicWaitingForSecondOperand = false;
+        let basicOperator = null;
+        let basicExpression = '';
+
+        function updateBasicDisplay() {
+            basicResultDisplay.textContent = basicDisplayValue;
+            basicSecondaryDisplay.textContent = basicExpression || '\u00A0';
+            log("Basic Display:", basicDisplayValue, "| Expression:", basicExpression);
+        }
+
+        function inputDigit(digit) {
+            if (basicWaitingForSecondOperand) {
+                basicDisplayValue = digit;
+                basicWaitingForSecondOperand = false;
             } else {
-                currentInput += number;
+                basicDisplayValue = basicDisplayValue === '0' ? digit : basicDisplayValue + digit;
             }
-            display.value = currentInput;
+             if (basicDisplayValue.length > 15) {
+                 basicDisplayValue = basicDisplayValue.slice(0, 15);
+             }
+            updateBasicDisplay();
         }
 
-        function setOperator(op) {
-            if (currentInput === '') return;
-            if (firstOperand !== null && operator !== null) {
-                calculate();
+        function inputDecimal() {
+            if (basicWaitingForSecondOperand) {
+                basicDisplayValue = '0.';
+                basicWaitingForSecondOperand = false;
+                updateBasicDisplay();
+                return;
             }
-            firstOperand = currentInput;
-            operator = op;
-            display.value = currentInput + " " + op; //show equation
-            currentInput = '';
-        }
-
-        function appendDecimal() {
-            if (currentInput.includes('.')) return;
-            currentInput += '.';
-            display.value = currentInput;
-        }
-
-        function clearDisplay() {
-            currentInput = '0';
-            operator = null;
-            firstOperand = null;
-            display.value = currentInput;
-        }
-
-        function changeSign() {
-            if (currentInput !== '0' && currentInput !== '') {
-                currentInput = (parseFloat(currentInput) * -1).toString();
-                display.value = currentInput;
+            if (!basicDisplayValue.includes('.')) {
+                basicDisplayValue += '.';
             }
+            updateBasicDisplay();
         }
 
-        function performOperation(op) {
-            if (currentInput === '') return;
-            firstOperand = currentInput;
-            operator = op;
-            calculate();
+         function handleOperator(nextOperator) {
+            const inputValue = parseFloat(basicDisplayValue);
+
+             if (basicOperator === null && basicWaitingForSecondOperand) {
+                 basicWaitingForSecondOperand = false;
+             }
+
+            if (basicOperator && !basicWaitingForSecondOperand) {
+                const result = performCalculation();
+                if (result === 'Error') {
+                    clearDisplay();
+                    basicResultDisplay.textContent = 'Error';
+                    return;
+                }
+                basicDisplayValue = String(result);
+                basicFirstOperand = result;
+            } else if (basicFirstOperand === null) {
+                basicFirstOperand = inputValue;
+            }
+
+            basicWaitingForSecondOperand = true;
+            basicOperator = nextOperator;
+            basicExpression = `${basicFirstOperand} ${basicOperator}`;
+            updateBasicDisplay();
+            log("Operator:", basicOperator, "First Operand:", basicFirstOperand);
+        }
+
+        function performCalculation() {
+            if (basicOperator === null || basicFirstOperand === null) {
+                log("PerformCalculation: No operator or first operand");
+                return parseFloat(basicDisplayValue);
+            }
+
+            const secondOperand = parseFloat(basicDisplayValue);
+            log(`Performing: ${basicFirstOperand} ${basicOperator} ${secondOperand}`);
+
+            let result;
+            switch (basicOperator) {
+                case '+': result = basicFirstOperand + secondOperand; break;
+                case '-': result = basicFirstOperand - secondOperand; break;
+                case '*': result = basicFirstOperand * secondOperand; break;
+                case '/':
+                    if (secondOperand === 0) {
+                        log("Error: Division by zero");
+                        return 'Error';
+                    }
+                    result = basicFirstOperand / secondOperand;
+                    break;
+                default:
+                    log("PerformCalculation: Unknown operator", basicOperator);
+                    return secondOperand;
+            }
+            result = parseFloat(result.toPrecision(12));
+            log("Calculation Result:", result);
+            return result;
         }
 
         function calculate() {
-            if (operator === null || firstOperand === null) return;
-            const num1 = parseFloat(firstOperand);
-            const num2 = parseFloat(currentInput);
+            if (basicOperator === null || basicWaitingForSecondOperand) {
+                 log("Calculate: Nothing to calculate or waiting for second operand.");
+                 basicWaitingForSecondOperand = true;
+                 basicExpression = `${basicDisplayValue} =`;
+                 updateBasicDisplay();
+                 return;
+             }
 
-            // Prepare the data to send to the server
-            const data = {
-                num1: num1,
-                num2: num2,
-                operator: operator,
-                mode: modeSelect.value // Include the selected mode
-            };
+            const result = performCalculation();
 
-            // Use fetch to send a POST request to the server
-            fetch('/', { // Send to the root URL
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    display.value = data.error;
-                } else {
-                    display.value = data.result;
-                    currentInput = data.result.toString();
-                    firstOperand = null;
-                    operator = null;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                display.value = 'Error';
-            });
-        }
-
-        function enableDarkMode() {
-            body.classList.add('dark-mode');
-            calculator.classList.add('dark-mode');
-            themeSwitchContainer.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-        }
-
-        function disableDarkMode() {
-            body.classList.remove('dark-mode');
-            calculator.classList.remove('dark-mode');
-            themeSwitchContainer.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light');
-        }
-
-        themeToggle.addEventListener('change', function () {
-            if (this.checked) {
-                enableDarkMode();
+            if (result === 'Error') {
+                basicDisplayValue = 'Error';
+                basicExpression = '';
             } else {
-                disableDarkMode();
+                basicExpression = `${basicFirstOperand} ${basicOperator} ${basicDisplayValue} =`;
+                basicDisplayValue = String(result);
             }
-        });
+            updateBasicDisplay();
+            basicFirstOperand = (result === 'Error') ? null : result;
+            basicOperator = null;
+            basicWaitingForSecondOperand = true;
+        }
 
-        settingsButton.addEventListener('click', () => {
-            settingsButton.classList.add('spinning');
-            setTimeout(() => {
-                settingsButton.classList.remove('spinning');
-            }, 700);
+        function resetCalculator() {
+            basicDisplayValue = '0';
+            basicFirstOperand = null;
+            basicWaitingForSecondOperand = false;
+            basicOperator = null;
+            basicExpression = '';
+            log("Basic Calculator Reset");
+        }
 
-            settingsOpen = !settingsOpen;
-            themeSwitchContainer.classList.toggle('open', settingsOpen);
-            calculator.classList.toggle('slide-up', settingsOpen);
-        });
+        function clearDisplay() {
+            resetCalculator();
+            updateBasicDisplay();
+        }
 
-        document.addEventListener('keydown', function(event) {
+        function backspace() {
+            if (basicWaitingForSecondOperand) {
+                 log("Backspace ignored: Waiting for second operand.");
+                 return;
+             }
+            basicDisplayValue = basicDisplayValue.slice(0, -1);
+            if (basicDisplayValue === '' || basicDisplayValue === '-') {
+                basicDisplayValue = '0';
+            }
+            updateBasicDisplay();
+        }
+
+        // --- Scientific Calculator State & Functions ---
+        let sciDisplayValue = '0';
+        let sciExpression = '';
+
+        function updateDisplayScientific() {
+            scientificResultDisplay.textContent = sciDisplayValue;
+            scientificSecondaryDisplay.textContent = sciExpression || '\u00A0';
+            log("Scientific Display:", sciDisplayValue, "| Expression:", sciExpression);
+        }
+
+        function appendNumberScientific(number) {
+            if (sciDisplayValue === 'Error' || !isFinite(parseFloat(sciDisplayValue))) {
+                sciDisplayValue = number;
+            } else if (sciDisplayValue === '0' && number !== '.') {
+                 sciDisplayValue = number;
+            }
+            else {
+                sciDisplayValue += number;
+            }
+             if (sciDisplayValue.length > 25) {
+                 sciDisplayValue = sciDisplayValue.slice(0, 25);
+             }
+            updateDisplayScientific();
+        }
+
+        function appendDecimalScientific() {
+            if (!sciDisplayValue.includes('.')) {
+                sciDisplayValue += '.';
+                updateDisplayScientific();
+            }
+        }
+
+        function appendOperatorScientific(op) {
+             if (sciDisplayValue === 'Error' || sciDisplayValue === 'Infinity') sciDisplayValue = '0';
+             sciDisplayValue += op;
+             updateDisplayScientific();
+        }
+
+         function backspaceScientific() {
+            sciDisplayValue = sciDisplayValue.slice(0, -1);
+            if (sciDisplayValue === '' || sciDisplayValue === '-') {
+                sciDisplayValue = '0';
+            }
+            updateDisplayScientific();
+        }
+
+        function clearDisplayScientific() {
+            sciDisplayValue = '0';
+            sciExpression = '';
+            inverseMode = false;
+            updateDisplayScientific();
+            log("Scientific Calculator Reset");
+         }
+
+         function setMode(mode) {
+            scientificMode = mode;
+            document.querySelectorAll('#scientific-calculator .btn-secondary.text-xs').forEach(btn => {
+                btn.classList.remove('bg-opacity-50');
+                if (btn.textContent === mode) {
+                    btn.classList.add('bg-opacity-50');
+                }
+            });
+            log("Scientific mode set to:", mode);
+         }
+
+        function factorial(n) {
+            if (n < 0 || !Number.isInteger(n)) return NaN;
+            if (n === 0 || n === 1) return 1;
+            let result = 1;
+            for (let i = n; i > 1; i--) {
+                result *= i;
+            }
+             return isFinite(result) ? result : Infinity;
+        }
+
+        function evaluateScientificExpression(expression) {
+             try {
+                 expression = expression
+                     .replace(/π/g, 'Math.PI')
+                     .replace(/e/g, 'Math.E')
+                     .replace(/(?<!\*)\^(?!\*)/g, '**')
+                     .replace(/√\(/g, 'Math.sqrt(')
+                     .replace(/log\(/g, 'Math.log10(')
+                     .replace(/ln\(/g, 'Math.log(');
+
+                 const trigReplacements = (match, func, content) => {
+                     const prefix = scientificMode === 'deg' ? '(Math.PI/180)*' : '';
+                     return `Math.${func}(${prefix}${content}`;
+                 };
+                 expression = expression.replace(/(sin|cos|tan)\(([^)]*)\)/g, trigReplacements);
+
+                 log("Evaluating scientific expression:", expression);
+                 return new Function(`return ${expression}`)();
+             } catch (error) {
+                 log("Evaluation Error:", error);
+                 return 'Error';
+             }
+         }
+
+        function calculateScientific(func) {
+            log("Calculating Scientific:", func, "Current Display:", sciDisplayValue);
+            let currentVal;
+             try {
+                 currentVal = parseFloat(sciDisplayValue);
+             } catch {
+                 currentVal = NaN;
+             }
+
+            let result;
+            let requiresEval = false;
+
+            if (func === '=') {
+                 requiresEval = true;
+                 sciExpression = sciDisplayValue + ' =';
+                 result = evaluateScientificExpression(sciDisplayValue);
+            } else if (func === 'inv') {
+                inverseMode = !inverseMode;
+                 const invButton = document.querySelector('#scientific-calculator button[onclick="calculateScientific(\'inv\')"]');
+                 if (invButton) invButton.classList.toggle('bg-opacity-50', inverseMode);
+                log("Inverse mode:", inverseMode);
+                return;
+            } else if (func === 'pi') {
+                 sciDisplayValue = (isNaN(currentVal) || sciDisplayValue === '0') ? 'π' : sciDisplayValue + 'π';
+                 updateDisplayScientific(); return;
+            } else if (func === 'e') {
+                 sciDisplayValue = (isNaN(currentVal) || sciDisplayValue === '0') ? 'e' : sciDisplayValue + 'e';
+                 updateDisplayScientific(); return;
+            } else if (func === 'fact') {
+                 if (!isNaN(currentVal)) {
+                     result = factorial(currentVal);
+                     sciExpression = `fact(${currentVal}) =`;
+                 } else { result = 'Error'; }
+            } else if (!isNaN(currentVal)) {
+                 let angle = scientificMode === 'deg' ? currentVal * (Math.PI / 180) : currentVal;
+                 let funcName = func;
+                 let opSymbol = func;
+
+                 switch (func) {
+                     case 'sin': result = inverseMode ? Math.asin(currentVal) : Math.sin(angle); funcName = inverseMode ? 'asin' : 'sin'; break;
+                     case 'cos': result = inverseMode ? Math.acos(currentVal) : Math.cos(angle); funcName = inverseMode ? 'acos' : 'cos'; break;
+                     case 'tan': result = inverseMode ? Math.atan(currentVal) : Math.tan(angle); funcName = inverseMode ? 'atan' : 'tan'; break;
+                     case 'log': result = inverseMode ? Math.pow(10, currentVal) : Math.log10(currentVal); funcName = inverseMode ? '10^' : 'log'; break;
+                     case 'ln': result = inverseMode ? Math.exp(currentVal) : Math.log(currentVal); funcName = inverseMode ? 'e^' : 'ln'; break;
+                     case 'sqrt': result = inverseMode ? currentVal * currentVal : Math.sqrt(currentVal); opSymbol = inverseMode ? 'sqr' : '√'; funcName = opSymbol; break;
+                     default:
+                         appendOperatorScientific(func);
+                         return;
+                 }
+                 if (inverseMode && ['sin', 'cos', 'tan'].includes(func) && scientificMode === 'deg') {
+                     result = result * (180 / Math.PI);
+                 }
+                 sciExpression = `${funcName}(${currentVal}) =`;
+            } else {
+                 appendOperatorScientific(func);
+                 return;
+            }
+
+            if (result === 'Error' || isNaN(result) || !isFinite(result)) {
+                sciDisplayValue = 'Error';
+                if (!requiresEval) sciExpression = '';
+            } else {
+                sciDisplayValue = String(parseFloat(result.toPrecision(12)));
+            }
+
+            inverseMode = false;
+            const invButton = document.querySelector('#scientific-calculator button[onclick="calculateScientific(\'inv\')"]');
+            if (invButton) invButton.classList.remove('bg-opacity-50');
+            updateDisplayScientific();
+        }
+
+        // --- Currency Exchange Functions ---
+        const exchangeRates = { USD: 1.0, EUR: 0.92, GBP: 0.79, CAD: 1.36, JPY: 157.4, AUD: 1.50, INR: 83.5 }; // Example rates
+
+        function convertCurrency() {
+            const amount = parseFloat(amountInput.value);
+            const fromCurrency = fromCurrencySelect.value;
+            const toCurrency = toCurrencySelect.value;
+            log("Converting Currency:", amount, fromCurrency, "to", toCurrency);
+
+            currencyError.textContent = '';
+            currencyResultDisplay.textContent = '';
+
+            if (isNaN(amount) || amount <= 0) {
+                currencyError.textContent = 'Please enter a valid positive amount.';
+                return;
+            }
+            if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) {
+                currencyError.textContent = 'Invalid currency selection.'; return;
+            }
+
+            const rateFrom = exchangeRates[fromCurrency];
+            const rateTo = exchangeRates[toCurrency];
+            const amountInUSD = amount / rateFrom;
+            const convertedAmount = amountInUSD * rateTo;
+
+            currencyResultDisplay.textContent = `${convertedAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+            const currencySecondaryDisplay = currencyResultDisplay.closest('.result-display-container').querySelector('.secondary-display');
+            if (currencySecondaryDisplay) {
+                currencySecondaryDisplay.textContent = `${amount.toLocaleString()} ${fromCurrency} to ${toCurrency}`;
+            }
+            log("Conversion Result:", convertedAmount);
+        }
+
+        function swapCurrencies() {
+            const fromVal = fromCurrencySelect.value;
+            const toVal = toCurrencySelect.value;
+            fromCurrencySelect.value = toVal;
+            toCurrencySelect.value = fromVal;
+            convertCurrency();
+            log("Swapped currencies");
+        }
+
+        // --- Unit Conversion Functions ---
+        const units = {
+            length: [ { name: 'Meter (m)', value: 'meter', factor: 1 }, { name: 'Kilometer (km)', value: 'kilometer', factor: 1000 }, { name: 'Centimeter (cm)', value: 'centimeter', factor: 0.01 }, { name: 'Millimeter (mm)', value: 'millimeter', factor: 0.001 }, { name: 'Mile (mi)', value: 'mile', factor: 1609.34 }, { name: 'Yard (yd)', value: 'yard', factor: 0.9144 }, { name: 'Foot (ft)', value: 'foot', factor: 0.3048 }, { name: 'Inch (in)', value: 'inch', factor: 0.0254 }, ],
+            mass: [ { name: 'Kilogram (kg)', value: 'kilogram', factor: 1 }, { name: 'Gram (g)', value: 'gram', factor: 0.001 }, { name: 'Milligram (mg)', value: 'milligram', factor: 0.000001 }, { name: 'Pound (lb)', value: 'pound', factor: 0.453592 }, { name: 'Ounce (oz)', value: 'ounce', factor: 0.0283495 }, ],
+            temperature: [ { name: 'Celsius (°C)', value: 'celsius' }, { name: 'Fahrenheit (°F)', value: 'fahrenheit' }, { name: 'Kelvin (K)', value: 'kelvin' }, ],
+            time: [ { name: 'Second (s)', value: 'second', factor: 1 }, { name: 'Minute (min)', value: 'minute', factor: 60 }, { name: 'Hour (hr)', value: 'hour', factor: 3600 }, { name: 'Day (d)', value: 'day', factor: 86400 }, { name: 'Week (wk)', value: 'week', factor: 604800 }, { name: 'Year (yr)', value: 'year', factor: 31557600 } ], // Approximate year
+            area: [ { name: 'Square Meter (m²)', value: 'sq_meter', factor: 1 }, { name: 'Square Kilometer (km²)', value: 'sq_kilometer', factor: 1e6 }, { name: 'Square Foot (ft²)', value: 'sq_foot', factor: 0.092903 }, { name: 'Acre (ac)', value: 'acre', factor: 4046.86 }, { name: 'Hectare (ha)', value: 'hectare', factor: 10000 }, ],
+            volume: [ { name: 'Cubic Meter (m³)', value: 'cubic_meter', factor: 1 }, { name: 'Liter (L)', value: 'liter', factor: 0.001 }, { name: 'Milliliter (mL)', value: 'milliliter', factor: 1e-6 }, { name: 'US Gallon (gal)', value: 'gallon_us', factor: 0.00378541 }, { name: 'US Quart (qt)', value: 'quart_us', factor: 0.000946353 }, { name: 'Cubic Foot (ft³)', value: 'cubic_foot', factor: 0.0283168 }, ]
+        };
+
+        function getUnitFactor(unitType, unitValue) {
+            const unit = units[unitType]?.find(u => u.value === unitValue);
+            return unit?.factor;
+        }
+
+        function populateUnits(typeSelect, unitSelect) {
+            const selectedType = typeSelect.value;
+            unitSelect.innerHTML = '';
+            units[selectedType]?.forEach(unit => {
+                const option = document.createElement('option');
+                option.value = unit.value;
+                option.textContent = unit.name;
+                unitSelect.appendChild(option);
+            });
+            log("Populated units for type:", selectedType);
+        }
+
+         function convertUnit() {
+            const value = parseFloat(unitValueInput.value);
+            const fromType = fromUnitTypeSelect.value;
+            const toType = toUnitTypeSelect.value;
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            log("Converting Unit:", value, fromUnit, "(", fromType, ") to", toUnit, "(", toType, ")");
+
+            unitError.textContent = '';
+            unitResultDisplay.textContent = '';
+            const unitSecondaryDisplay = unitResultDisplay.closest('.result-display-container').querySelector('.secondary-display');
+            if(unitSecondaryDisplay) unitSecondaryDisplay.textContent = '\u00A0';
+
+            if (isNaN(value)) { unitError.textContent = 'Please enter a valid value.'; return; }
+            if (fromType !== toType && !(fromType === 'length' && toType === 'area')) { // Basic check, can be expanded
+                 unitError.textContent = 'Cannot convert between different unit types unless compatible (e.g. length to area).';
+                 return;
+            }
+
+
+            let convertedValue;
+            if (fromType === 'temperature') {
+                if (fromUnit === toUnit) { convertedValue = value; }
+                else if (fromUnit === 'celsius') { convertedValue = (toUnit === 'fahrenheit') ? (value * 9/5) + 32 : value + 273.15; }
+                else if (fromUnit === 'fahrenheit') { convertedValue = (toUnit === 'celsius') ? (value - 32) * 5/9 : (value - 32) * 5/9 + 273.15; }
+                else { /* from Kelvin */ convertedValue = (toUnit === 'celsius') ? value - 273.15 : (value - 273.15) * 9/5 + 32; }
+            } else {
+                const factorFrom = getUnitFactor(fromType, fromUnit);
+                const factorTo = getUnitFactor(toType, toUnit);
+                if (factorFrom === undefined || factorTo === undefined) {
+                     unitError.textContent = 'Internal error: Unit factors not found.';
+                     return;
+                }
+                const valueInBase = value * factorFrom;
+                convertedValue = valueInBase / factorTo;
+            }
+
+            const fromUnitName = units[fromType].find(u => u.value === fromUnit)?.name || fromUnit;
+            const toUnitName = units[toType].find(u => u.value === toUnit)?.name || toUnit;
+
+            unitResultDisplay.textContent = `${convertedValue.toLocaleString(undefined, { maximumFractionDigits: 5 })}`;
+             if(unitSecondaryDisplay) {
+                 unitSecondaryDisplay.textContent = `${value.toLocaleString()} ${fromUnitName} = Result in ${toUnitName}`;
+             }
+            log("Unit Conversion Result:", convertedValue);
+        }
+
+        // --- Loan Calculator Functions ---
+        function calculateLoan() {
+            const loanAmount = parseFloat(loanAmountInput.value);
+            const annualInterestRate = parseFloat(interestRateInput.value);
+            const loanTermYears = parseFloat(loanTermInput.value);
+            // Get selected interest type
+            const interestType = document.querySelector('input[name="interest-type"]:checked').value;
+
+            log("Calculating Loan:", loanAmount, annualInterestRate, loanTermYears, "Type:", interestType);
+
+            loanError.textContent = '';
+            loanResultDisplay.textContent = '';
+            if(loanSecondaryDisplay) loanSecondaryDisplay.textContent = '\u00A0';
+
+            if (isNaN(loanAmount) || loanAmount <= 0) { loanError.textContent = 'Please enter a valid positive loan amount.'; return; }
+            if (isNaN(annualInterestRate) || annualInterestRate < 0) { loanError.textContent = 'Please enter a valid non-negative interest rate.'; return; }
+            if (isNaN(loanTermYears) || loanTermYears <= 0) { loanError.textContent = 'Please enter a valid positive loan term in years.'; return; }
+
+            const totalPaymentsMonths = loanTermYears * 12;
+            let monthlyPayment;
+            let totalRepayment;
+            let totalInterest;
+            let secondaryMessagePrefix = interestType === 'simple' ? 'Simple Int. | ' : 'Compound Int. | ';
+
+
+            if (totalPaymentsMonths <= 0) { loanError.textContent = 'Loan term must result in at least one payment.'; return; }
+
+            if (interestType === 'simple') {
+                const rateDecimal = annualInterestRate / 100;
+                totalInterest = loanAmount * rateDecimal * loanTermYears;
+                totalRepayment = loanAmount + totalInterest;
+                monthlyPayment = totalRepayment / totalPaymentsMonths;
+            } else { // Compound interest (existing logic)
+                const monthlyInterestRate = (annualInterestRate / 100) / 12;
+                if (monthlyInterestRate === 0) {
+                    monthlyPayment = loanAmount / totalPaymentsMonths;
+                } else {
+                    const numerator = loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalPaymentsMonths);
+                    const denominator = Math.pow(1 + monthlyInterestRate, totalPaymentsMonths) - 1;
+                     if (denominator === 0) { loanError.textContent = 'Calculation error (denominator is zero).'; return; }
+                    monthlyPayment = numerator / denominator;
+                }
+                totalRepayment = monthlyPayment * totalPaymentsMonths;
+                totalInterest = totalRepayment - loanAmount;
+            }
+
+
+            loanResultDisplay.textContent = `$${monthlyPayment.toFixed(2)}`;
+            if(loanSecondaryDisplay) {
+                loanSecondaryDisplay.textContent = `${secondaryMessagePrefix}Monthly | Total Repay: $${totalRepayment.toFixed(2)} | Total Interest: $${totalInterest.toFixed(2)}`;
+            }
+
+            log("Loan Calculation Result: Type=", interestType, "Monthly=", monthlyPayment, "Total Repay=", totalRepayment, "Total Interest=", totalInterest);
+        }
+
+
+        // --- Graphing Calculator Functions ---
+        function plotGraph() {
+             if (typeof functionPlot !== 'function') {
+                 graphError.textContent = "Graphing library not loaded yet.";
+                 console.error("functionPlot is not defined or not a function.");
+                 return;
+             }
+
+            const expression = functionInput.value.trim();
+            const xMin = parseFloat(xminInput.value);
+            const xMax = parseFloat(xmaxInput.value);
+            log("Plotting Graph:", expression, "Range:", xMin, "to", xMax);
+
+            graphError.textContent = '';
+            graphContainer.innerHTML = '';
+
+            if (expression === '') { graphError.textContent = 'Please enter a function to plot.'; return; }
+            if (isNaN(xMin) || isNaN(xMax)) { graphError.textContent = 'Please enter valid numbers for X Min and X Max.'; return; }
+            if (xMax <= xMin) { graphError.textContent = 'X Max must be greater than X Min.'; return; }
+
+            try {
+                if (graphContainer.offsetWidth === 0 || graphContainer.offsetHeight === 0) {
+                    console.warn("Graph container has no dimensions. Using defaults.");
+                }
+
+                const plotOptions = {
+                    target: graphContainer,
+                    width: graphContainer.clientWidth || 400,
+                    height: graphContainer.clientHeight || 350,
+                    data: [{ fn: expression, color: isDarkMode ? 'var(--md-sys-color-primary-dark)' : 'var(--md-sys-color-primary-light)', graphType: 'polyline' }],
+                    grid: true,
+                    xAxis: { domain: [xMin, xMax], label: 'x' },
+                    yAxis: { label: 'f(x)' },
+                    tip: { xLine: true, yLine: true, renderer: (x, y) => `x: ${x.toFixed(3)}<br>y: ${y.toFixed(3)}` }
+                };
+                log("FunctionPlot options:", plotOptions);
+                functionPlot(plotOptions);
+            } catch (error) {
+                console.error("Graphing Error:", error);
+                graphError.textContent = `Error plotting: ${error.message}. Check syntax.`;
+                graphContainer.innerHTML = '';
+            }
+        }
+
+        // --- Theme Toggle ---
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            themeText.textContent = isDarkMode ? 'Dark' : 'Light';
+            themeToggleBtn.querySelector('i').classList.toggle('fa-moon', !isDarkMode);
+            themeToggleBtn.querySelector('i').classList.toggle('fa-sun', isDarkMode);
+            log("Theme toggled. Dark mode:", isDarkMode);
+
+            const activeSection = document.querySelector('.calculator-section.active');
+            if (activeSection && activeSection.id === 'graphing-calculator' && typeof functionPlot === 'function') {
+                plotGraph(); // Re-plot graph with new theme colors
+            }
+        }
+
+        // --- Keyboard Input Handling ---
+        function handleKeyboardInput(event) {
+            if (!isBasicCalculatorActive()) {
+                return;
+            }
             const key = event.key;
-            switch (key) {
-                case '0': appendNumber('0'); break;
-                case '1': appendNumber('1'); break;
-                case '2': appendNumber('2'); break;
-                case '3': appendNumber('3'); break;
-                case '4': appendNumber('4'); break;
-                case '5': appendNumber('5'); break;
-                case '6': appendNumber('6'); break;
-                case '7': appendNumber('7'); break;
-                case '8': appendNumber('8'); break;
-                case '9': appendNumber('9'); break;
-                case '+': setOperator('+'); break;
-                case '-': setOperator('-'); break;
-                case '*': setOperator('*'); break;
-                case '/': setOperator('/'); break;
-                case '.': appendDecimal(); break;
-                case '=':
-                case 'Enter': calculate(); break;
-                case 'Escape': clearDisplay(); break;
-                case 'Backspace':
-                    if (currentInput.length > 0) {
-                        currentInput = currentInput.slice(0, -1);
-                        display.value = currentInput;
-                    }
-                    break;
-            }
+            log("Key pressed:", key);
+
+            if (key >= '0' && key <= '9') { inputDigit(key); event.preventDefault(); }
+            else if (key === '.') { inputDecimal(); event.preventDefault(); }
+            else if (key === '+' || key === '-' || key === '*' || key === '/') { handleOperator(key); event.preventDefault(); }
+            else if (key === 'Enter' || key === '=') { calculate(); event.preventDefault(); }
+            else if (key === 'Backspace') { backspace(); event.preventDefault(); }
+            else if (key === 'Escape' || key.toLowerCase() === 'c') { clearDisplay(); event.preventDefault(); }
+        }
+
+        // --- Event Listeners ---
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        calculatorNavItems.forEach(item => {
+            item.addEventListener('click', function() {
+                updateActiveNav(this.dataset.target);
+            });
         });
+
+        if (convertCurrencyBtn) convertCurrencyBtn.addEventListener('click', convertCurrency);
+        if (swapCurrencyBtn) swapCurrencyBtn.addEventListener('click', swapCurrencies);
+
+        if (fromUnitTypeSelect) fromUnitTypeSelect.addEventListener('change', () => { populateUnits(fromUnitTypeSelect, fromUnitSelect); convertUnit(); });
+        if (toUnitTypeSelect) toUnitTypeSelect.addEventListener('change', () => { populateUnits(toUnitTypeSelect, toUnitSelect); convertUnit(); });
+        if (fromUnitSelect) fromUnitSelect.addEventListener('change', convertUnit);
+        if (toUnitSelect) toUnitSelect.addEventListener('change', convertUnit);
+        if (unitValueInput) unitValueInput.addEventListener('input', debounce(convertUnit, 300)); // Debounce for better UX
+        if (convertUnitBtn) convertUnitBtn.addEventListener('click', convertUnit);
+
+        if (calculateLoanBtn) calculateLoanBtn.addEventListener('click', calculateLoan);
+        [loanAmountInput, interestRateInput, loanTermInput].forEach(input => {
+            if (input) input.addEventListener('input', debounce(calculateLoan, 300)); // Debounce
+        });
+        // Add event listeners for new loan interest type radio buttons
+        loanInterestTypeRadios.forEach(radio => {
+            radio.addEventListener('change', calculateLoan);
+        });
+
+
+        if (plotGraphBtn) plotGraphBtn.addEventListener('click', plotGraph);
+        [functionInput, xminInput, xmaxInput].forEach(input => {
+             if(input) input.addEventListener('input', debounce(plotGraph, 500));
+        });
+
+         const debouncedResizeHandler = debounce(() => {
+            log("Window resized");
+            const activeSection = document.querySelector('.calculator-section.active');
+            if (activeSection && activeSection.id === 'graphing-calculator' && typeof functionPlot === 'function') {
+                 log("Re-plotting graph due to resize");
+                plotGraph();
+            }
+        }, 250);
+        window.addEventListener('resize', debouncedResizeHandler);
+
+        window.addEventListener('keydown', handleKeyboardInput);
+
+        // --- Initial Setup ---
+         window.addEventListener('DOMContentLoaded', () => {
+             log("DOM Content Loaded");
+
+             isDarkMode = document.body.classList.contains('dark-mode');
+             themeText.textContent = isDarkMode ? 'Dark' : 'Light';
+             themeToggleBtn.querySelector('i').classList.toggle('fa-moon', !isDarkMode);
+             themeToggleBtn.querySelector('i').classList.toggle('fa-sun', isDarkMode);
+
+             setMode(scientificMode);
+
+            const initialCalculatorNavItem = document.querySelector('.calculator-nav-item.active');
+            const initialCalculatorId = initialCalculatorNavItem?.dataset.target || 'basic-calculator';
+            log("Initial calculator ID:", initialCalculatorId);
+            updateActiveNav(initialCalculatorId);
+
+            if (fromUnitTypeSelect && fromUnitSelect) { populateUnits(fromUnitTypeSelect, fromUnitSelect); }
+            if (toUnitTypeSelect && toUnitSelect) { populateUnits(toUnitTypeSelect, toUnitSelect); }
+            // Initial calculations if values are present
+            if (document.getElementById('unit-conversion-calculator').classList.contains('active') && unitValueInput?.value) convertUnit();
+            if (document.getElementById('currency-exchange-calculator').classList.contains('active') && amountInput?.value) convertCurrency();
+            if (document.getElementById('loan-calculator').classList.contains('active') && loanAmountInput?.value) calculateLoan();
+
+
+            updateBasicDisplay(); // For basic calculator
+
+             if (initialCalculatorId === 'graphing-calculator') {
+                 setTimeout(() => {
+                     if (typeof functionPlot === 'function') { plotGraph(); }
+                     else { console.error("functionPlot still not ready on initial load check."); graphError.textContent = "Error loading graphing library."; }
+                 }, 100);
+             }
+            log("Initial setup complete.");
+         });
     </script>
 </body>
 </html>
